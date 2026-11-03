@@ -91,7 +91,14 @@
     font-size: clamp(14px, 2.1vh, 22px);
     color: var(--frost);
   }
-  .tools { display: flex; gap: 10px; }
+  .tools { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .credit {
+    margin: 0 6px 0 0;
+    font-weight: 700;
+    font-size: clamp(13px, 1.8vh, 18px);
+    color: var(--frost);
+    letter-spacing: 0.02em;
+  }
   .tool {
     font-family: var(--font-body);
     font-weight: 800;
@@ -381,6 +388,7 @@
       <p class="tagline">Race to the Candy Castle &middot; 40 spaces</p>
     </div>
     <div class="tools">
+      <p class="credit">By: Simon McDougal</p>
       <button class="tool" id="fsBtn" type="button">Full screen</button>
       <button class="tool" id="resetBtn" type="button">Reset board</button>
     </div>
