@@ -1,0 +1,1033 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Winter Spirit Week Race</title>
+<meta name="description" content="Winter Spirit Week race board: four grades race 40 spaces to the Candy Castle.">
+<meta name="theme-color" content="#15224a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-50 -50 100 100'%3E%3Crect x='-50' y='-50' width='100' height='100' rx='22' fill='%2315224a'/%3E%3Cg stroke='%23ffffff' stroke-width='8' stroke-linecap='round'%3E%3Cpath d='M0,-34V34M-29,-17L29,17M-29,17L29,-17'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Lilita+One&display=swap">
+<style>
+  /* Layout: one projector screen. Slim title strip, the 40-tile snowy candy board filling the middle, four grade cards docked along the bottom. */
+  :root {
+    --night: #15224a;
+    --ink: #1d2a4d;
+    --ink-2: #2e4170;
+    --snow: #ffffff;
+    --ice: #2f8fe0;
+    --ice-2: #d8ecff;
+    --frost: #9fd3ff;
+    --lemon: #ffd23f;
+
+    --g9: #ff4fa8;
+    --g10: #8b3dff;
+    --g11: #17a84a;
+    --g12: #e3172f;
+
+    --sky: #dcefff;
+    --ground: #ffffff;
+
+    --font-display: "Lilita One", "Arial Rounded MT Bold", "Trebuchet MS", system-ui, sans-serif;
+    --font-body: "Baloo 2", "Arial Rounded MT Bold", "Trebuchet MS", system-ui, sans-serif;
+    color-scheme: light;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { height: 100%; }
+  [hidden] { display: none !important; }
+
+  body {
+    margin: 0;
+    color: var(--snow);
+    font-family: var(--font-body);
+    background-color: var(--night);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cg fill='%23ffffff' opacity='.22'%3E%3Ccircle cx='20' cy='24' r='2.5'/%3E%3Ccircle cx='96' cy='14' r='1.6'/%3E%3Ccircle cx='150' cy='52' r='3'/%3E%3Ccircle cx='58' cy='88' r='1.8'/%3E%3Ccircle cx='122' cy='112' r='2.4'/%3E%3Ccircle cx='28' cy='150' r='1.6'/%3E%3Ccircle cx='160' cy='164' r='2'/%3E%3Ccircle cx='86' cy='160' r='2.8'/%3E%3C/g%3E%3C/svg%3E");
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  .app {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(8px, 1.4vh, 16px);
+    padding-block: clamp(8px, 1.5vh, 18px);
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  /* Header */
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 20px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 2px 20px;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+  .title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(30px, 5.4vh, 62px);
+    line-height: 1.05;
+    letter-spacing: 0.03em;
+    color: var(--snow);
+    text-shadow: 0 4px 0 var(--ice);
+    text-wrap: balance;
+  }
+  .tagline {
+    margin: 0;
+    font-weight: 700;
+    font-size: clamp(14px, 2.1vh, 22px);
+    color: var(--frost);
+  }
+  .tools { display: flex; gap: 10px; }
+  .tool {
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: clamp(13px, 1.7vh, 17px);
+    color: var(--snow);
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.45);
+    border-radius: 999px;
+    padding: 0.3em 1em;
+    cursor: pointer;
+  }
+  .tool:hover { background: rgba(255, 255, 255, 0.12); }
+  .tool:focus-visible { outline: 3px solid var(--lemon); outline-offset: 2px; }
+
+  /* Board */
+  .board-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+  }
+  #board {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 8px 0 rgba(0, 0, 0, 0.3));
+  }
+  .sign-text, .tile-num, .pnum {
+    font-family: var(--font-display);
+    paint-order: stroke;
+    stroke-linejoin: round;
+  }
+  .sign-text { fill: var(--snow); stroke: var(--ink); stroke-width: 5px; }
+  .tile-num { font-size: 32px; fill: var(--snow); stroke: var(--ink); stroke-width: 6px; }
+  .pnum { fill: var(--snow); stroke: var(--ink); stroke-width: 4px; }
+  .crown { display: none; }
+  .won .crown { display: inline; }
+  .won .bob { animation: bob 0.9s ease-in-out infinite; }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  /* Grade cards */
+  .dock {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(10px, 1.2vw, 20px);
+    padding-top: 8px;
+  }
+  .card {
+    position: relative;
+    min-width: 0;
+    display: grid;
+    gap: clamp(6px, 1vh, 10px);
+    padding: clamp(8px, 1.3vh, 14px) clamp(10px, 1vw, 16px) clamp(10px, 1.5vh, 16px);
+    background: var(--c);
+    border: 4px solid var(--snow);
+    border-radius: 22px;
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.4);
+  }
+  .ink {
+    color: var(--snow);
+    text-shadow:
+      -2px -2px 0 var(--ink), 2px -2px 0 var(--ink),
+      -2px 2px 0 var(--ink), 2px 2px 0 var(--ink),
+      0 3px 0 var(--ink);
+  }
+  .card-head {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(6px, 0.8vw, 12px);
+  }
+  .mini {
+    display: block;
+    width: clamp(40px, 6.4vh, 66px);
+    height: auto;
+    overflow: visible;
+  }
+  .who { min-width: 0; }
+  .name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(20px, 3.3vh, 38px);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 3px 3px 4px;
+  }
+  .togo {
+    margin: 0;
+    padding: 0 3px;
+    font-weight: 800;
+    font-size: clamp(13px, 1.85vh, 20px);
+    line-height: 1.15;
+  }
+  .spot {
+    text-align: right;
+    font-family: var(--font-display);
+    line-height: 0.9;
+    font-variant-numeric: tabular-nums;
+    padding-right: 3px;
+  }
+  .spot .num { display: block; font-size: clamp(32px, 6.4vh, 74px); }
+  .spot .num.is-word { font-size: clamp(20px, 3.6vh, 40px); }
+  .spot .of {
+    display: block;
+    margin-top: 2px;
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: clamp(11px, 1.55vh, 17px);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .place {
+    position: absolute;
+    top: -15px;
+    right: clamp(10px, 1vw, 16px);
+    font-family: var(--font-display);
+    font-size: clamp(14px, 2vh, 22px);
+    line-height: 1;
+    padding: 0.22em 0.6em 0.26em;
+    border-radius: 999px;
+    background: var(--snow);
+    color: var(--ink);
+    border: 3px solid var(--ink);
+  }
+  .place.first { background: var(--lemon); }
+  .track {
+    height: clamp(10px, 1.5vh, 16px);
+    border-radius: 999px;
+    background: rgba(29, 42, 77, 0.35);
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.55);
+    overflow: hidden;
+  }
+  .fill {
+    height: 100%;
+    width: 0%;
+    border-radius: inherit;
+    background: repeating-linear-gradient(-45deg, var(--snow) 0 8px, var(--ice-2) 8px 16px);
+    transition: width 0.4s ease;
+  }
+  .btns {
+    display: grid;
+    grid-template-columns: 1fr 1.7fr 1.3fr;
+    gap: clamp(6px, 0.6vw, 10px);
+  }
+  .btn {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(18px, 3.1vh, 36px);
+    line-height: 1;
+    padding: 0.22em 0.3em 0.28em;
+    border-radius: 14px;
+    border: 3px solid var(--ink);
+    background: var(--snow);
+    color: var(--ink);
+    box-shadow: 0 5px 0 var(--ink);
+    cursor: pointer;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: transform 0.07s ease, box-shadow 0.07s ease;
+  }
+  .btn:hover { background: var(--ice-2); }
+  .btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn:focus-visible { outline: 4px solid var(--lemon); outline-offset: 3px; }
+  .btn.back {
+    background: rgba(29, 42, 77, 0.28);
+    color: var(--snow);
+    border-color: rgba(255, 255, 255, 0.75);
+    box-shadow: none;
+  }
+
+  /* Overlays */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: grid;
+    place-items: center;
+    background: rgba(12, 20, 44, 0.88);
+    padding-block: 24px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .win-card {
+    display: grid;
+    justify-items: center;
+    gap: clamp(6px, 1.4vh, 16px);
+    text-align: center;
+    max-width: 100%;
+    animation: pop 0.55s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+  }
+  @keyframes pop {
+    from { transform: scale(0.85); }
+    to { transform: scale(1); }
+  }
+  .win-pawn { width: clamp(110px, 22vh, 240px); height: auto; overflow: visible; }
+  .win-kicker {
+    margin: 0;
+    font-weight: 800;
+    font-size: clamp(18px, 3.4vh, 36px);
+    color: var(--frost);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .win-grade {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(54px, 16vh, 190px);
+    line-height: 0.95;
+    color: var(--c);
+    text-wrap: balance;
+    text-shadow:
+      -6px 0 0 var(--snow), 6px 0 0 var(--snow), 0 -6px 0 var(--snow), 0 6px 0 var(--snow),
+      -4px -4px 0 var(--snow), 4px -4px 0 var(--snow), -4px 4px 0 var(--snow), 4px 4px 0 var(--snow),
+      0 14px 0 var(--ink-2);
+  }
+  .win-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(44px, 12vh, 150px);
+    line-height: 0.95;
+    color: var(--lemon);
+    text-shadow: 0 8px 0 var(--ice);
+  }
+  .win-card .btn { font-size: clamp(18px, 2.6vh, 28px); padding: 0.35em 1em 0.4em; margin-top: 8px; }
+
+  .sheet {
+    width: 100%;
+    max-width: 520px;
+    display: grid;
+    gap: 14px;
+    padding: clamp(18px, 3vh, 32px);
+    background: var(--snow);
+    color: var(--ink);
+    border: 4px solid var(--ink);
+    border-radius: 24px;
+    box-shadow: 0 10px 0 rgba(0, 0, 0, 0.4);
+  }
+  .sheet h2 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(26px, 4vh, 40px); line-height: 1.05; }
+  .sheet p { margin: 0; font-size: 18px; font-weight: 600; line-height: 1.4; }
+  .sheet-btns { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; margin-top: 6px; }
+  .sheet .btn { font-size: 22px; padding: 0.35em 0.9em 0.4em; }
+  .btn.danger { background: var(--g12); color: var(--snow); }
+  .btn.danger:hover { background: #c3112a; }
+
+  #confetti { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 60; pointer-events: none; }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+  }
+
+  /* Big screens: everything fits one screen with no scrolling */
+  @media (min-width: 900px) and (min-height: 560px) {
+    .app { height: 100%; }
+    .board-wrap { flex: 1 1 0; min-height: 0; }
+    #board { height: 100%; }
+  }
+  @media (max-width: 899px) {
+    .dock { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 22px; }
+  }
+  @media (max-width: 520px) {
+    .dock { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .won .bob, .win-card { animation: none; }
+    .fill { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <h1 class="title">Winter Spirit Week</h1>
+      <p class="tagline">Race to the Candy Castle &middot; 40 spaces</p>
+    </div>
+    <div class="tools">
+      <button class="tool" id="fsBtn" type="button">Full screen</button>
+      <button class="tool" id="resetBtn" type="button">Reset board</button>
+    </div>
+  </header>
+
+  <main class="board-wrap">
+    <svg id="board" viewBox="0 0 1600 780" role="img" aria-label="Snowy candy board with 40 spaces from Start to the Candy Castle"></svg>
+  </main>
+
+  <section class="dock" id="dock" aria-label="Grade controls"></section>
+  <p class="sr-only" id="live" aria-live="polite"></p>
+</div>
+
+<div class="overlay win" id="winOverlay" role="dialog" aria-modal="true" aria-labelledby="winGrade" hidden>
+  <div class="win-card">
+    <svg class="win-pawn won" id="winPawn" viewBox="-44 -100 88 110" aria-hidden="true"></svg>
+    <p class="win-kicker">First to the Candy Castle</p>
+    <h2 class="win-grade" id="winGrade">9th Grade</h2>
+    <p class="win-title">WINS!</p>
+    <button class="btn" id="winClose" type="button">Back to the board</button>
+  </div>
+</div>
+
+<div class="overlay" id="resetOverlay" role="dialog" aria-modal="true" aria-labelledby="resetTitle" hidden>
+  <div class="sheet">
+    <h2 id="resetTitle">Start a new race?</h2>
+    <p>All four grades go back to Start. The current positions are cleared.</p>
+    <div class="sheet-btns">
+      <button class="btn" id="resetCancel" type="button">Keep playing</button>
+      <button class="btn danger" id="resetConfirm" type="button">Reset the board</button>
+    </div>
+  </div>
+</div>
+
+<canvas id="confetti" hidden></canvas>
+
+<script>
+(() => {
+  'use strict';
+
+  const N = 40;                  // spaces from Start to the castle
+  const W = 1600, H = 780;       // board viewBox
+  const KEY = 'winter-spirit-week-race-40';
+  const css = getComputedStyle(document.documentElement);
+  const tok = (name) => css.getPropertyValue(name).trim();
+  const C = tok('--ink'), F = tok('--snow');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const GRADES = [
+    { id: '9',  label: '9th Grade',  color: tok('--g9') },
+    { id: '10', label: '10th Grade', color: tok('--g10') },
+    { id: '11', label: '11th Grade', color: tok('--g11') },
+    { id: '12', label: '12th Grade', color: tok('--g12') },
+  ];
+  const byId = Object.fromEntries(GRADES.map((g) => [g.id, g]));
+  const TILE_COLORS = GRADES.map((g) => g.color);
+
+  // ---------- Road geometry: three wavy rows joined by U-turns ----------
+  const ROWS = [660, 430, 200];
+  const XL = 330, XR = 1380, X_END = 1270;
+  const TURN = (ROWS[0] - ROWS[1]) / 2;
+  const AMP = 18, WAVES = 2;
+  const pts = [];
+  const wiggle = (t) => AMP * Math.sin(2 * Math.PI * WAVES * t) * Math.sin(Math.PI * t);
+
+  function row(y, x0, x1) {
+    const n = Math.ceil(Math.abs(x1 - x0) / 4);
+    for (let i = pts.length ? 1 : 0; i <= n; i++) {
+      const t = i / n;
+      pts.push([x0 + (x1 - x0) * t, y + wiggle(t)]);
+    }
+  }
+  function turn(cx, cy, a0, a1) {
+    const n = 90;
+    for (let i = 1; i <= n; i++) {
+      const a = a0 + (a1 - a0) * (i / n);
+      pts.push([cx + TURN * Math.cos(a), cy + TURN * Math.sin(a)]);
+    }
+  }
+  row(ROWS[0], XL, XR);
+  turn(XR, ROWS[0] - TURN, Math.PI / 2, -Math.PI / 2);
+  row(ROWS[1], XR, XL);
+  turn(XL, ROWS[1] - TURN, Math.PI / 2, Math.PI * 1.5);
+  row(ROWS[2], XL, X_END);
+
+  const cum = [0];
+  for (let i = 1; i < pts.length; i++) {
+    cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+  }
+  const LEN = cum[cum.length - 1];
+  const GAP = LEN / N;
+
+  function at(s) {
+    let lo = 0, hi = cum.length - 1;
+    while (hi - lo > 1) {
+      const m = (lo + hi) >> 1;
+      if (cum[m] <= s) lo = m; else hi = m;
+    }
+    const t = (s - cum[lo]) / ((cum[hi] - cum[lo]) || 1);
+    return [pts[lo][0] + (pts[hi][0] - pts[lo][0]) * t, pts[lo][1] + (pts[hi][1] - pts[lo][1]) * t];
+  }
+
+  const tiles = [];
+  for (let i = 1; i <= N; i++) {
+    const s = (i - 0.5) * GAP;
+    const [x, y] = at(s);
+    const a = at(Math.max(0, s - 3)), b = at(Math.min(LEN, s + 3));
+    let deg = Math.atan2(b[1] - a[1], b[0] - a[0]) * 180 / Math.PI;
+    if (deg > 90) deg -= 180; else if (deg <= -90) deg += 180;
+    tiles.push({ i, x, y, deg });
+  }
+
+  // ---------- A light scatter of snowflakes in open space (seeded, so it looks the same every time) ----------
+  function seeded(seed) {
+    return () => {
+      seed = (seed + 0x6D2B79F5) | 0;
+      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  const rand = seeded(20261031);
+  const ROAD_HALF = 52;
+  const roadDist = (x, y) => {
+    let m = Infinity;
+    for (let i = 0; i < pts.length; i += 2) {
+      const d = Math.hypot(pts[i][0] - x, pts[i][1] - y);
+      if (d < m) m = d;
+    }
+    return m;
+  };
+  const BLOCKED = [
+    { x0: 1276, y0: 0, x1: 1592, y1: 290 }, // castle
+    { x0: 10, y0: 550, x1: 312, y1: 770 },  // start pad
+  ];
+  const flakes = [];
+  for (let gy = 40; gy < H; gy += 60) {
+    for (let gx = 40; gx < W; gx += 60) {
+      const r = 10 + rand() * 9;
+      const x = gx + (rand() - 0.5) * 34;
+      const y = gy + (rand() - 0.5) * 34;
+      const keep = rand() < 0.3;
+      const tilt = rand() * 60;
+      if (!keep) continue;
+      if (x - r < 20 || x + r > W - 20 || y - r < 20 || y + r > H - 20) continue;
+      if (BLOCKED.some((b) => x + r > b.x0 && x - r < b.x1 && y + r > b.y0 && y - r < b.y1)) continue;
+      if (roadDist(x, y) < ROAD_HALF + r + 10) continue;
+      if (flakes.some((d) => Math.hypot(d.x - x, d.y - y) < d.r + r + 30)) continue;
+      flakes.push({ x, y, r, tilt });
+    }
+  }
+
+  // ---------- Board drawing ----------
+  const f1 = (n) => +n.toFixed(1);
+  let flakeArms = '';
+  for (let k = 0; k < 6; k++) {
+    const a = (k / 6) * Math.PI * 2;
+    const p = (d, off = 0) => `${f1(Math.cos(a + off) * d)},${f1(Math.sin(a + off) * d)}`;
+    flakeArms += `M0,0 L${p(42)} M${p(26)} L${p(38, 0.38)} M${p(26)} L${p(38, -0.38)} `;
+  }
+
+  const defs = `
+    <clipPath id="boardClip"><rect width="${W}" height="${H}" rx="34"/></clipPath>
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="${tok('--sky')}"/><stop offset="1" stop-color="${tok('--ground')}"/>
+    </linearGradient>
+    <symbol id="flake" viewBox="-50 -50 100 100">
+      <path d="${flakeArms}" fill="none" stroke="#a8cdf0" stroke-width="7" stroke-linecap="round"/>
+    </symbol>`;
+
+  const drifts = `
+    <ellipse cx="260" cy="812" rx="420" ry="150" fill="#eef6ff"/>
+    <ellipse cx="900" cy="836" rx="520" ry="160" fill="#e6f1fd"/>
+    <ellipse cx="1460" cy="806" rx="360" ry="150" fill="#eef6ff"/>`;
+
+  const snow = flakes.map((d) =>
+    `<use href="#flake" x="${f1(d.x - d.r)}" y="${f1(d.y - d.r)}" width="${f1(d.r * 2)}" height="${f1(d.r * 2)}" transform="rotate(${f1(d.tilt)} ${f1(d.x)} ${f1(d.y)})"/>`).join('');
+
+  const roadD = 'M290,660 L' + pts.map((p) => f1(p[0]) + ',' + f1(p[1])).join(' L') + ' L1330,200';
+  const road = `
+    <path d="${roadD}" fill="none" stroke="${C}" stroke-width="${ROAD_HALF * 2}" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="${roadD}" fill="none" stroke="${F}" stroke-width="${ROAD_HALF * 2 - 8}" stroke-linejoin="round" stroke-linecap="round"/>`;
+
+  const TW = GAP - 8, TH = 88;
+  const tileMarkup = tiles.map((t) => `
+    <g transform="translate(${f1(t.x)} ${f1(t.y)}) rotate(${f1(t.deg)})">
+      <rect x="${f1(-TW / 2)}" y="${-TH / 2}" width="${f1(TW)}" height="${TH}" rx="14" fill="${TILE_COLORS[(t.i - 1) % TILE_COLORS.length]}" stroke="${C}" stroke-width="4"/>
+      <rect x="${f1(-TW / 2 + 8)}" y="${-TH / 2 + 7}" width="${f1(TW - 16)}" height="13" rx="6.5" fill="#ffffff" opacity=".35"/>
+    </g>`).join('');
+  const tileNums = tiles.map((t) =>
+    `<text class="tile-num" x="${f1(t.x)}" y="${f1(t.y + 11)}" text-anchor="middle">${t.i}</text>`).join('');
+
+  // Snow cap for a roof whose peak is at (x, y)
+  const cap = (x, y) => `<path d="M${x - 15},${y + 24} L${x},${y} L${x + 15},${y + 24} Q${x + 8},${y + 31} ${x},${y + 24} Q${x - 8},${y + 31} ${x - 15},${y + 24} Z" fill="${F}" stroke-width="3"/>`;
+  let drip = 'M88,132 H244 V140';
+  for (let x = 244, k = 0; x > 88; x -= 16, k++) {
+    const len = k % 2 ? 7 : 13;
+    drip += ` C${x - 2},${140 + len} ${x - 14},${140 + len} ${x - 16},140`;
+  }
+  drip += ' Z';
+  // Drawn facing left, then mirrored into the top-right corner so its door meets the end of the road.
+  const castle = `
+    <g transform="translate(1600 15) scale(-1 1)" stroke="${C}" stroke-width="4" stroke-linejoin="round">
+      <ellipse cx="168" cy="244" rx="156" ry="17" fill="#eef6ff"/>
+      <rect x="30" y="86" width="62" height="156" fill="#cfe4ff"/>
+      <path d="M22,92 L61,30 L100,92 Z" fill="${tok('--g9')}"/>
+      ${cap(61, 30)}
+      <path d="M50,132 V120 a11,11 0 0 1 22,0 V132 Z" fill="${C}"/>
+      <rect x="122" y="66" width="88" height="80" fill="#ffd6ea"/>
+      <path d="M112,72 L166,16 L220,72 Z" fill="${tok('--g10')}"/>
+      ${cap(166, 16)}
+      <circle cx="166" cy="100" r="12" fill="${tok('--lemon')}"/>
+      ${[90, 122, 154, 186, 218].map((x) => `<rect x="${x}" y="116" width="18" height="18" rx="3" fill="#ffc2de"/>`).join('')}
+      <rect x="86" y="130" width="160" height="112" fill="#ffc2de"/>
+      <path d="${drip}" fill="#ffffff" stroke="none"/>
+      <rect x="238" y="74" width="66" height="168" fill="#cfe4ff"/>
+      <path d="M230,80 L271,20 L312,80 Z" fill="${tok('--g9')}"/>
+      ${cap(271, 20)}
+      <path d="M260,124 V112 a11,11 0 0 1 22,0 V124 Z" fill="${C}"/>
+      <path d="M250,242 V200 A21,21 0 0 1 292,200 V242 Z" fill="${C}"/>
+      <rect x="94" y="164" width="144" height="38" rx="9" fill="${tok('--ice')}"/>
+    </g>
+    <text class="sign-text" x="1434" y="208" text-anchor="middle" font-size="27">FINISH</text>`;
+
+  const startPad = `
+    <rect x="96" y="600" width="8" height="54" fill="${tok('--ink-2')}"/>
+    <rect x="216" y="600" width="8" height="54" fill="${tok('--ink-2')}"/>
+    <rect x="18" y="650" width="284" height="114" rx="26" fill="${F}" stroke="${C}" stroke-width="4"/>
+    <rect x="29" y="661" width="262" height="92" rx="17" fill="none" stroke="${tok('--frost')}" stroke-width="6" stroke-dasharray="14 10"/>
+    <rect x="76" y="556" width="168" height="48" rx="14" fill="${tok('--ice')}" stroke="${C}" stroke-width="4"/>
+    <text class="sign-text" x="160" y="591" text-anchor="middle" font-size="32">START</text>`;
+
+  const svg = document.getElementById('board');
+  svg.innerHTML = `
+    <defs>${defs}</defs>
+    <g clip-path="url(#boardClip)">
+      <rect width="${W}" height="${H}" fill="url(#skyGrad)"/>
+      ${drifts}
+      ${snow}
+      ${road}
+      ${tileMarkup}
+      ${tileNums}
+      ${startPad}
+      ${castle}
+    </g>
+    <rect x="5" y="5" width="${W - 10}" height="${H - 10}" rx="30" fill="none" stroke="${F}" stroke-width="10"/>
+    <g id="pawnLayer"></g>`;
+
+  // ---------- Gingerbread pawns ----------
+  function pawnMarkup(g) {
+    const arms = 'M-26,-35 Q0,-47 26,-35';
+    const legs = 'M-9,-20 L-14,-7 M9,-20 L14,-7';
+    const body = (grow, color) => `
+      <circle cx="0" cy="-58" r="15" fill="${color}" stroke="${color}" stroke-width="${grow * 2}"/>
+      <rect x="-15" y="-48" width="30" height="34" rx="12" fill="${color}" stroke="${color}" stroke-width="${grow * 2}"/>
+      <path d="${arms}" fill="none" stroke="${color}" stroke-width="${12 + grow * 2}" stroke-linecap="round"/>
+      <path d="${legs}" fill="none" stroke="${color}" stroke-width="${14 + grow * 2}" stroke-linecap="round"/>`;
+    return `
+      <ellipse cx="0" cy="5" rx="24" ry="6.5" fill="${C}" opacity=".28"/>
+      <g class="bob">
+        ${body(7, C)}
+        ${body(3.5, F)}
+        ${body(0, g.color)}
+        <ellipse cx="-6" cy="-66" rx="5" ry="3" fill="#ffffff" opacity=".45"/>
+        <circle cx="-5" cy="-60" r="2.6" fill="${C}"/>
+        <circle cx="5" cy="-60" r="2.6" fill="${C}"/>
+        <path d="M-6,-53 Q0,-48 6,-53" fill="none" stroke="${C}" stroke-width="2.4" stroke-linecap="round"/>
+        <text class="pnum" x="0" y="-21" text-anchor="middle" font-size="${g.id.length > 1 ? 19 : 22}">${g.id}</text>
+        <path class="crown" d="M-15,-74 L-16,-90 L-8,-82 L0,-95 L8,-82 L16,-90 L15,-74 Z" fill="${tok('--lemon')}" stroke="${C}" stroke-width="3" stroke-linejoin="round"/>
+      </g>`;
+  }
+
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  const pawnLayer = document.getElementById('pawnLayer');
+  const PAWN_SCALE = 1.5;
+  const FOOT = 16;                       // feet sit just below the tile's center
+  const START = { x0: 64, dx: 64, y: 752 };
+  const P = {};
+  GRADES.forEach((g, i) => {
+    const el = document.createElementNS(SVGNS, 'g');
+    el.setAttribute('class', 'pawn');
+    el.innerHTML = `<g transform="scale(${PAWN_SCALE})">${pawnMarkup(g)}</g>`;
+    pawnLayer.appendChild(el);
+    P[g.id] = { i, el, disp: 0, from: 0, to: 0, t0: 0, dur: 0, moving: false, ox: 0, oy: 0, x: 0, y: 0 };
+  });
+
+  // ---------- State ----------
+  const fresh = () => ({ pos: Object.fromEntries(GRADES.map((g) => [g.id, 0])), finish: [], celebrated: null });
+  let state = fresh();
+
+  function normalize(raw) {
+    const s = fresh();
+    if (!raw || typeof raw !== 'object' || !raw.pos) return s;
+    for (const g of GRADES) {
+      const v = Math.round(Number(raw.pos[g.id]));
+      s.pos[g.id] = Number.isFinite(v) ? Math.min(N, Math.max(0, v)) : 0;
+    }
+    if (Array.isArray(raw.finish)) {
+      s.finish = raw.finish.filter((id, k, arr) => byId[id] && s.pos[id] === N && arr.indexOf(id) === k);
+    }
+    for (const g of GRADES) if (s.pos[g.id] === N && !s.finish.includes(g.id)) s.finish.push(g.id);
+    s.celebrated = raw.celebrated && raw.celebrated === s.finish[0] ? raw.celebrated : null;
+    return s;
+  }
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; }
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* storage unavailable; positions still live on screen */ }
+  }
+
+  // ---------- Grade cards ----------
+  const dock = document.getElementById('dock');
+  const live = document.getElementById('live');
+  const cards = {};
+  for (const g of GRADES) {
+    const card = document.createElement('article');
+    card.className = 'card';
+    card.style.setProperty('--c', g.color);
+    card.innerHTML = `
+      <span class="place" hidden></span>
+      <div class="card-head">
+        <svg class="mini" viewBox="-44 -100 88 110" aria-hidden="true">${pawnMarkup(g)}</svg>
+        <div class="who">
+          <h2 class="name ink">${g.label}</h2>
+          <p class="togo ink"></p>
+        </div>
+        <div class="spot ink"><span class="num"></span><span class="of"></span></div>
+      </div>
+      <div class="track" role="progressbar" aria-label="${g.label} progress" aria-valuemin="0" aria-valuemax="${N}"><div class="fill"></div></div>
+      <div class="btns">
+        <button class="btn back" id="g${g.id}-back" type="button" data-d="-1" aria-label="Move ${g.label} back 1 space" title="Undo: move back 1 space">&minus;1</button>
+        <button class="btn" id="g${g.id}-plus1" type="button" data-d="1" aria-label="Move ${g.label} forward 1 space">+1</button>
+        <button class="btn" id="g${g.id}-plus5" type="button" data-d="5" aria-label="Move ${g.label} forward 5 spaces">+5</button>
+      </div>`;
+    card.querySelector('.btns').addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-d]');
+      if (btn) move(g.id, Number(btn.dataset.d));
+    });
+    dock.appendChild(card);
+    cards[g.id] = {
+      card,
+      mini: card.querySelector('.mini'),
+      place: card.querySelector('.place'),
+      togo: card.querySelector('.togo'),
+      num: card.querySelector('.num'),
+      of: card.querySelector('.of'),
+      track: card.querySelector('.track'),
+      fill: card.querySelector('.fill'),
+      back: card.querySelector('[data-d="-1"]'),
+      plus: [...card.querySelectorAll('[data-d="1"], [data-d="5"]')],
+    };
+  }
+
+  const ordinal = (n) => n + (['th', 'st', 'nd', 'rd'][(n % 100 - 20) % 10] || ['th', 'st', 'nd', 'rd'][n % 100] || 'th');
+
+  function places() {
+    const out = {};
+    for (const g of GRADES) {
+      const pos = state.pos[g.id], fin = state.finish.indexOf(g.id);
+      if (pos === 0) { out[g.id] = null; continue; }
+      let ahead = 0;
+      for (const o of GRADES) {
+        if (o.id === g.id) continue;
+        const ofin = state.finish.indexOf(o.id);
+        if (fin >= 0) { if (ofin >= 0 && ofin < fin) ahead++; }
+        else if (ofin >= 0 || state.pos[o.id] > pos) ahead++;
+      }
+      out[g.id] = ahead + 1;
+    }
+    return out;
+  }
+
+  function renderDock() {
+    const pl = places();
+    for (const g of GRADES) {
+      const c = cards[g.id], pos = state.pos[g.id];
+      if (pos === 0) {
+        c.num.textContent = 'Start';
+        c.num.classList.add('is-word');
+        c.of.textContent = '';
+        c.togo.textContent = `${N} spaces to go`;
+      } else {
+        c.num.textContent = pos;
+        c.num.classList.remove('is-word');
+        c.of.textContent = `of ${N}`;
+        c.togo.textContent = pos === N ? 'Made it to the castle!' : `${N - pos} to go`;
+      }
+      c.fill.style.width = `${(pos / N) * 100}%`;
+      c.track.setAttribute('aria-valuenow', pos);
+      c.back.disabled = pos === 0;
+      c.plus.forEach((b) => { b.disabled = pos === N; });
+      const place = pl[g.id];
+      c.place.hidden = !place;
+      if (place) {
+        c.place.textContent = ordinal(place);
+        c.place.classList.toggle('first', place === 1);
+      }
+    }
+    updateCrowns();
+  }
+
+  // The crown goes on the first grade to finish, once its pawn has actually landed on the last space.
+  function updateCrowns() {
+    const champ = state.finish[0];
+    for (const g of GRADES) {
+      const won = g.id === champ && P[g.id].disp === N && !P[g.id].moving;
+      P[g.id].el.classList.toggle('won', won);
+      cards[g.id].mini.classList.toggle('won', g.id === champ);
+    }
+  }
+
+  function move(id, delta) {
+    const old = state.pos[id];
+    const next = Math.min(N, Math.max(0, old + delta));
+    if (next === old) return;
+    state.pos[id] = next;
+    if (next === N && !state.finish.includes(id)) state.finish.push(id);
+    if (next < N) state.finish = state.finish.filter((x) => x !== id);
+    if (state.celebrated && state.finish[0] !== state.celebrated) state.celebrated = null;
+    save();
+    renderDock();
+    live.textContent = next === 0 ? `${byId[id].label} is back at Start` : `${byId[id].label} is on space ${next} of ${N}`;
+    kick();
+  }
+
+  // ---------- Pawn animation: one hop per space ----------
+  const STEP_MS = 300, FAST_MS = 200, HOP = 40;
+
+  function basePoint(id, pos) {
+    if (pos <= 0) return [START.x0 + P[id].i * START.dx, START.y];
+    const t = tiles[pos - 1];
+    return [t.x, t.y + FOOT];
+  }
+
+  function groupOffsets() {
+    const groups = {};
+    for (const g of GRADES) {
+      const p = P[g.id];
+      const k = p.moving ? p.to : p.disp;
+      if (k > 0) (groups[k] = groups[k] || []).push(g.id);
+    }
+    const out = {};
+    for (const g of GRADES) out[g.id] = [0, 0];
+    for (const k in groups) {
+      const ids = groups[k], n = ids.length;
+      if (n < 2) continue;
+      ids.forEach((id, j) => { out[id] = [(j - (n - 1) / 2) * 86, j % 2 ? 6 : -4]; });
+    }
+    return out;
+  }
+
+  let raf = 0;
+  let order = '';
+  function kick() { if (!raf) raf = requestAnimationFrame(frame); }
+
+  function frame(now) {
+    raf = 0;
+    let busy = false;
+    for (const g of GRADES) {
+      const p = P[g.id], target = state.pos[g.id];
+      if (!p.moving && p.disp !== target) {
+        p.from = p.disp;
+        p.to = p.disp + Math.sign(target - p.disp);
+        p.t0 = now;
+        p.dur = reduceMotion ? 0 : (Math.abs(target - p.disp) > 3 ? FAST_MS : STEP_MS);
+        p.moving = true;
+      }
+    }
+    const offs = groupOffsets();
+    for (const g of GRADES) {
+      const p = P[g.id];
+      const [tx, ty] = offs[g.id];
+      const ease = reduceMotion ? 1 : 0.22;
+      p.ox += (tx - p.ox) * ease;
+      p.oy += (ty - p.oy) * ease;
+      if (Math.abs(tx - p.ox) > 0.3 || Math.abs(ty - p.oy) > 0.3) busy = true;
+      else { p.ox = tx; p.oy = ty; }
+
+      let x, y;
+      if (p.moving) {
+        const t = p.dur ? Math.min(1, (now - p.t0) / p.dur) : 1;
+        const a = basePoint(g.id, p.from), b = basePoint(g.id, p.to);
+        const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+        x = a[0] + (b[0] - a[0]) * e;
+        y = a[1] + (b[1] - a[1]) * e - HOP * Math.sin(Math.PI * t);
+        if (t >= 1) { p.moving = false; p.disp = p.to; landed(g.id); }
+        busy = true;
+      } else {
+        [x, y] = basePoint(g.id, p.disp);
+      }
+      p.x = x + p.ox;
+      p.y = y + p.oy;
+      p.el.setAttribute('transform', `translate(${f1(p.x)} ${f1(p.y)})`);
+    }
+    // Pawns lower on screen (and any pawn mid-hop) draw on top.
+    const sorted = GRADES.map((g) => g.id).sort((a, b) => (P[a].moving - P[b].moving) || (P[a].y - P[b].y));
+    const key = sorted.join(',');
+    if (key !== order) { order = key; sorted.forEach((id) => pawnLayer.appendChild(P[id].el)); }
+
+    if (busy || GRADES.some((g) => P[g.id].disp !== state.pos[g.id])) kick();
+  }
+
+  function landed(id) {
+    updateCrowns();
+    if (P[id].disp === N && state.finish[0] === id && state.celebrated !== id && state.pos[id] === N) {
+      state.celebrated = id;
+      save();
+      setTimeout(() => showWin(id), reduceMotion ? 0 : 350);
+    }
+  }
+
+  // ---------- Winner screen ----------
+  const winOverlay = document.getElementById('winOverlay');
+  const winPawn = document.getElementById('winPawn');
+  const winGrade = document.getElementById('winGrade');
+  const winClose = document.getElementById('winClose');
+
+  function showWin(id) {
+    const g = byId[id];
+    winOverlay.style.setProperty('--c', g.color);
+    winPawn.innerHTML = pawnMarkup(g);
+    winGrade.textContent = g.label;
+    winOverlay.hidden = false;
+    winClose.focus();
+    launchConfetti(g.color);
+  }
+  function hideWin() {
+    winOverlay.hidden = true;
+    stopConfetti();
+  }
+  winClose.addEventListener('click', hideWin);
+
+  const cv = document.getElementById('confetti');
+  const cx = cv.getContext('2d');
+  let confettiRaf = 0;
+  function stopConfetti() {
+    cancelAnimationFrame(confettiRaf);
+    cx.clearRect(0, 0, cv.width, cv.height);
+    cv.hidden = true;
+  }
+  function launchConfetti(color) {
+    if (reduceMotion) return;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    const w = window.innerWidth, h = window.innerHeight;
+    cv.width = w * dpr;
+    cv.height = h * dpr;
+    cv.hidden = false;
+    const palette = [color, color, color, color, F, F, tok('--frost')];
+    const bits = Array.from({ length: 260 }, () => ({
+      x: Math.random() * w,
+      y: -Math.random() * h * 0.9 - 20,
+      vx: (Math.random() - 0.5) * 2.4,
+      vy: 2.2 + Math.random() * 3.6,
+      w: 8 + Math.random() * 10,
+      h: 5 + Math.random() * 7,
+      r: Math.random() * 6.28,
+      vr: (Math.random() - 0.5) * 0.25,
+      c: palette[Math.floor(Math.random() * palette.length)],
+      round: Math.random() < 0.3,
+    }));
+    const t0 = performance.now();
+    cancelAnimationFrame(confettiRaf);
+    const step = (now) => {
+      const el = now - t0;
+      cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cx.clearRect(0, 0, w, h);
+      let alive = false;
+      for (const b of bits) {
+        b.x += b.vx + Math.sin(el / 400 + b.r) * 0.6;
+        b.y += b.vy;
+        b.r += b.vr;
+        if (b.y > h + 20 && el < 5000) { b.y = -20; b.x = Math.random() * w; }
+        if (b.y < h + 20) alive = true;
+        cx.save();
+        cx.translate(b.x, b.y);
+        cx.rotate(b.r);
+        cx.fillStyle = b.c;
+        if (b.round) { cx.beginPath(); cx.arc(0, 0, b.h / 1.5, 0, Math.PI * 2); cx.fill(); }
+        else cx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h);
+        cx.restore();
+      }
+      if (alive && el < 12000) confettiRaf = requestAnimationFrame(step);
+      else stopConfetti();
+    };
+    confettiRaf = requestAnimationFrame(step);
+  }
+
+  // ---------- Reset ----------
+  const resetOverlay = document.getElementById('resetOverlay');
+  const resetBtn = document.getElementById('resetBtn');
+  resetBtn.addEventListener('click', () => {
+    resetOverlay.hidden = false;
+    document.getElementById('resetCancel').focus();
+  });
+  document.getElementById('resetCancel').addEventListener('click', () => {
+    resetOverlay.hidden = true;
+    resetBtn.focus();
+  });
+  document.getElementById('resetConfirm').addEventListener('click', () => {
+    state = fresh();
+    for (const g of GRADES) Object.assign(P[g.id], { disp: 0, from: 0, to: 0, moving: false });
+    save();
+    renderDock();
+    hideWin();
+    resetOverlay.hidden = true;
+    live.textContent = 'Board reset. All grades are back at Start.';
+    kick();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (!resetOverlay.hidden) resetOverlay.hidden = true;
+    else if (!winOverlay.hidden) hideWin();
+  });
+
+  // ---------- Full screen + keep the display awake ----------
+  const fsBtn = document.getElementById('fsBtn');
+  if (!document.fullscreenEnabled) fsBtn.hidden = true;
+  fsBtn.addEventListener('click', async () => {
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else await document.documentElement.requestFullscreen();
+    } catch (e) {
+      fsBtn.hidden = true;
+    }
+  });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? 'Exit full screen' : 'Full screen';
+  });
+
+  let wakeLock = null;
+  async function keepAwake() {
+    if (wakeLock || !('wakeLock' in navigator) || document.visibilityState !== 'visible') return;
+    try {
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', () => { wakeLock = null; });
+    } catch (e) { /* not allowed here; the screen may sleep on its own settings */ }
+  }
+  document.addEventListener('pointerdown', keepAwake);
+  document.addEventListener('visibilitychange', keepAwake);
+
+  // ---------- Boot ----------
+  state = normalize(load());
+  for (const g of GRADES) Object.assign(P[g.id], { disp: state.pos[g.id], moving: false });
+  renderDock();
+  kick();
+})();
+</script>
+</body>
+</html>
